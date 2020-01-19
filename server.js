@@ -1,28 +1,23 @@
 const express = require('express');
-const mongoose = require('mongoose');
 const path = require('path');
 
 const app = express();
 
-// Bodyparser Middleware
-app.use(express.json());
+// Serve the static files from the React app
+app.use(express.static(path.join(__dirname, 'client/build')));
 
-
-
-// Use Routes
+// An api endpoint that returns a short list of items
 app.get('/checkthenode',(req,res) => {
   res.status(200).send("hurray you succedded")
 })
 
 
-  // Set static folder
-  app.use(express.static('client/build'));
-
-  app.get('*', (req, res) => {
-    res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
-  });
-
+// Handles any requests that don't match the ones above
+app.get('*', (req,res) =>{
+    res.sendFile(path.join(__dirname+'/client/build/index.html'));
+});
 
 const port = process.env.PORT || 5000;
+app.listen(port);
 
-app.listen(port, () => console.log(`Server started on port ${port}`));
+console.log('App is listening on port ' + port);
